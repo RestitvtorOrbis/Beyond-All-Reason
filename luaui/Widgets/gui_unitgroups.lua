@@ -29,7 +29,6 @@ local leftclick = 'LuaUI/Sounds/buildbar_add.wav'
 local rightclick = 'LuaUI/Sounds/buildbar_click.wav'
 
 local vsx, vsy = Spring.GetViewGeometry()
-local fontFile = "fonts/" .. Spring.GetConfigString("bar_font2", "Exo2-SemiBold.otf")
 
 local spec = Spring.GetSpectatingState()
 
@@ -75,10 +74,9 @@ function widget:ViewResize()
 	vsx, vsy = Spring.GetViewGeometry()
 	height = setHeight * uiScale
 
-	local outlineMult = math.clamp(1/(vsy/1400), 1, 2)
-
-	font2 = WG['fonts'].getFont(nil, 1.2 * 1.8, 0.45 * 1.25*outlineMult, 1.3+(outlineMult*0.25))
-	font = WG['fonts'].getFont(fontFile, 1.1 * 1.8, 0.45 * 1.25*outlineMult, 1.3+(outlineMult*0.25))
+	local outlineMult = math.clamp(1/(vsy/1400), 1, 1.5)
+	font2 = WG['fonts'].getFont()
+	font2 = WG['fonts'].getFont(2)
 
 	elementCorner = WG.FlowUI.elementCorner
 	backgroundPadding = WG.FlowUI.elementPadding
@@ -228,8 +226,8 @@ local function drawContent()
 		local offsetY = -(fontSize*(posY > 0 and 0.31 or 0.44))
 		local style = 'co'
 		font2:Begin()
-		font2:SetOutlineColor(0.35,0.35,0.35,useRenderToTexture and 0.35 or 0.15)
-		font2:SetTextColor(0.5,0.5,0.5,useRenderToTexture and 1 or 0.5)
+		font2:SetOutlineColor(0.2, 0.2, 0.2, useRenderToTexture and 0.75 or 0.15)
+		font2:SetTextColor(0.5,0.5,0.5,1)
 		font2:Print(1, groupRect[1]+((groupRect[3]-groupRect[1])/2)-offset, groupRect[2]+((groupRect[4]-groupRect[2])/2)+offset+offsetY, fontSize, style)
 		font2:Print(2, groupRect[1]+((groupRect[3]-groupRect[1])/2), groupRect[2]+((groupRect[4]-groupRect[2])/2)+offset+offsetY, fontSize, style)
 		font2:Print(3, groupRect[1]+((groupRect[3]-groupRect[1])/2)+offset, groupRect[2]+((groupRect[4]-groupRect[2])/2)+offset+offsetY, fontSize, style)
