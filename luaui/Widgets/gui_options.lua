@@ -28,7 +28,7 @@ local newerVersion = false	-- configdata will set this true if it's a newer vers
 
 local keyLayouts = VFS.Include("luaui/configs/keyboard_layouts.lua")
 
-local languageCodes = { 'en', 'fr', 'ru' }
+local languageCodes = { 'en', 'fr', 'ru', 'es' }
 languageCodes = table.merge(languageCodes, table.invert(languageCodes))
 
 local languageNames = {}
@@ -36,7 +36,7 @@ for key, code in ipairs(languageCodes) do
 	languageNames[key] = Spring.I18N.languages[code]
 end
 
-local devLanguageCodes = { 'en', 'fr', 'de', 'ru', 'zh', 'test_unicode', }
+local devLanguageCodes = { 'en', 'fr', 'de', 'ru', 'zh', 'es', 'test_unicode', }
 devLanguageCodes = table.merge(devLanguageCodes, table.invert(devLanguageCodes))
 
 local devLanguageNames = {}
@@ -169,6 +169,9 @@ local heightmapChangeBuffer = {}
 local widgetScale = (vsy / 1080)
 
 local edgeMoveWidth = tonumber(Spring.GetConfigFloat("EdgeMoveWidth", 1) or 0.02)
+
+WG["IntroCameraIsDone"] = true
+IntroCameraIsPlaying = true
 
 local defaultMapSunPos = { gl.GetSun("pos") }
 local defaultSunLighting = {
@@ -984,8 +987,22 @@ function widget:Update(dt)
 	--if tonumber(Spring.GetConfigInt("CameraSmoothing", 0)) == 1 then
 	--	Spring.SetCameraState(nil, 1)
 	--else
-		if WG.lockcamera and not WG.lockcamera.GetPlayerID() and WG.setcamera_bugfix == true then
+		if ((not WG.IntroCameraInitialised) or WG.IntroCameraIsDone) and WG.lockcamera and not WG.lockcamera.GetPlayerID() and WG.setcamera_bugfix == true then
 			Spring.SetCameraState(nil, cameraTransitionTime)
+			if IntroCameraIsPlaying then
+				local halfLife = cameraTransitionTime
+				if halfLife <= 1 then
+					halfLife = halfLife * 200
+				else
+					halfLife = halfLife * 600 - 400
+				end
+				Spring.SetConfigFloat("CamSpringHalflife", halfLife)
+				IntroCameraIsPlaying = false
+			end
+		elseif WG.IntroCameraInitialised and not WG.IntroCameraIsDone then
+			IntroCameraIsPlaying = true
+			Spring.SetCameraState(nil, 3.25)
+			Spring.SetConfigFloat("CamSpringHalflife", 800)
 		end
 	--end
 
