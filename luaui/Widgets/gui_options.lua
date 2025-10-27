@@ -2849,18 +2849,18 @@ function init()
 			end
 		end
 		},
-		{ id = "soundtrackSpooktober", group = "sound", category = types.basic, name = Spring.I18N('ui.settings.option.soundtrackspooktober'), type = "bool", value = Spring.GetConfigInt('UseSoundtrackSpooktober', 1) == 1, description = Spring.I18N('ui.settings.option.soundtrackspooktober_descr'),
+		{ id = "soundtrackHalloween", group = "sound", category = types.basic, name = Spring.I18N('ui.settings.option.soundtrackhalloween'), type = "bool", value = Spring.GetConfigInt('UseSoundtrackHalloween', 1) == 1, description = Spring.I18N('ui.settings.option.soundtrackhalloween_descr'),
 			onchange = function(i, value)
-				Spring.SetConfigInt('UseSoundtrackSpooktober', value and 1 or 0)
+				Spring.SetConfigInt('UseSoundtrackHalloween', value and 1 or 0)
 				if WG['music'] and WG['music'].RefreshTrackList then
 					WG['music'].RefreshTrackList()
 					init()
 				end
 			end
 		},
-		{ id = "soundtrackSpooktoberPostEvent", group = "sound", category = types.basic, name = Spring.I18N('ui.settings.option.soundtrackspooktoberpostevent'), type = "bool", value = Spring.GetConfigInt('UseSoundtrackSpooktoberPostEvent', 0) == 1, description = Spring.I18N('ui.settings.option.soundtrackspooktoberpostevent_descr'),
+		{ id = "soundtrackHalloweenPostEvent", group = "sound", category = types.basic, name = Spring.I18N('ui.settings.option.soundtrackhalloweenpostevent'), type = "bool", value = Spring.GetConfigInt('UseSoundtrackHalloweenPostEvent', 0) == 1, description = Spring.I18N('ui.settings.option.soundtrackhalloweenpostevent_descr'),
 		onchange = function(i, value)
-			Spring.SetConfigInt('UseSoundtrackSpooktoberPostEvent', value and 1 or 0)
+			Spring.SetConfigInt('UseSoundtrackHalloweenPostEvent', value and 1 or 0)
 			if WG['music'] and WG['music'].RefreshTrackList then
 				WG['music'].RefreshTrackList()
 				init()
@@ -5987,21 +5987,21 @@ function init()
 		options[getOptionByID('spectator_hud_metric_damageDealt')] = nil
 	end
 
-	if (not (tonumber(os.date("%m")) == 4 and tonumber(os.date("%d")) <= 7)) then
+	if not Spring.Utilities.Gametype.GetCurrentHolidays()["aprilfools"] then
 		options[getOptionByID('soundtrackAprilFools')] = nil
 		Spring.SetConfigInt("UseSoundtrackAprilFools", 1)
 	else
 		options[getOptionByID('soundtrackAprilFoolsPostEvent')] = nil
 	end
 
-	if (not (tonumber(os.date("%m")) == 10 and tonumber(os.date("%d")) >= 17)) then
-		options[getOptionByID('soundtrackSpooktober')] = nil
-		Spring.SetConfigInt("UseSoundtrackSpooktober", 1)
+	if not Spring.Utilities.Gametype.GetCurrentHolidays()["halloween"] then
+		options[getOptionByID('soundtrackHalloween')] = nil
+		Spring.SetConfigInt("UseSoundtrackHalloween", 1)
 	else
-		options[getOptionByID('soundtrackSpooktoberPostEvent')] = nil
+		options[getOptionByID('soundtrackHalloweenPostEvent')] = nil
 	end
 
-	if (not (tonumber(os.date("%m")) == 12 and tonumber(os.date("%d")) >= 12)) then
+	if not Spring.Utilities.Gametype.GetCurrentHolidays()["xmas"] then
 		options[getOptionByID('soundtrackXmas')] = nil
 		Spring.SetConfigInt("UseSoundtrackXmas", 1)
 	else
